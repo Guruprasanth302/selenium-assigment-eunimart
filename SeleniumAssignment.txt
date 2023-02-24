@@ -1,0 +1,200 @@
+How to obtain the page title using Selenium webdriver?
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class AmazonTitleTest {
+
+    public static void main(String[] args) {
+        
+        // set the path of the ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        
+        // create a new Chrome browser instance
+        WebDriver driver = new ChromeDriver();
+        
+        // navigate to the Amazon website
+        driver.get("https://www.amazon.com/");
+        
+        // get the title of the website
+        String title = driver.getTitle();
+        
+        // print the title
+        System.out.println("The title of the Amazon website is: " + title);
+        
+        // close the browser
+        driver.quit();
+    }
+}
+Assignment : 
+1)General Test Cases for Ecommerce Application
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class AmazonTest {
+
+    public static void main(String[] args) {
+        
+        // set the path of the ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        
+        // create a new Chrome browser instance
+        WebDriver driver = new ChromeDriver();
+        
+        // navigate to the Amazon website
+        driver.get("https://www.amazon.com/");
+        
+        // test case 1: verify that the website title is correct
+        String expectedTitle = "Amazon.com: Online Shopping for Electronics, Apparel, Computers, Books, DVDs & more";
+        String actualTitle = driver.getTitle();
+        if (expectedTitle.equals(actualTitle)) {
+            System.out.println("Test case 1 passed!");
+        } else {
+            System.out.println("Test case 1 failed: expected title = " + expectedTitle + ", actual title = " + actualTitle);
+        }
+        
+        // test case 2: search for a product and verify that the search results page is displayed
+        WebElement searchBox = driver.findElement(By.id("twotabsearchtextbox"));
+        searchBox.sendKeys("iPhone");
+        searchBox.submit();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.titleContains("iPhone"));
+        String searchResultsTitle = driver.getTitle();
+        if (searchResultsTitle.contains("iPhone")) {
+            System.out.println("Test case 2 passed!");
+        } else {
+            System.out.println("Test case 2 failed: expected title to contain 'iPhone', actual title = " + searchResultsTitle);
+        }
+        
+        // test case 3: select a product from the search results page and verify that the product page is displayed
+        WebElement firstProduct = driver.findElement(By.xpath("//div[@data-component-type='s-search-result']//h2/a"));
+        String productTitle = firstProduct.getText();
+        firstProduct.click();
+        wait.until(ExpectedConditions.titleContains(productTitle));
+        String productPageTitle = driver.getTitle();
+        if (productPageTitle.contains(productTitle)) {
+            System.out.println("Test case 3 passed!");
+        } else {
+            System.out.println("Test case 3 failed: expected title to contain '" + productTitle + "', actual title = " + productPageTitle);
+        }
+        
+        // close the browser
+        driver.quit();
+    }
+}
+2)Product Buy Flow – Test cases for Ecommerce Website:
+Test Case 1: Adding a product to the cart
+
+    Navigate to the homepage of Amazon.
+    Search for a product using the search bar or browse through the categories to find a product.
+    Click on the product to view its details.
+    Verify that the product details (name, price, description, etc.) are correct.
+    Select the desired quantity of the product to add to the cart.
+    Click on the "Add to Cart" button.
+    Verify that the product is added to the cart and the cart counter is updated with the correct quantity.
+Code :
+          // Navigate to the homepage
+driver.get("https://www.amazon.com");
+
+// Search for a product
+WebElement searchBox = driver.findElement(By.id("twotabsearchtextbox"));
+searchBox.sendKeys("product name");
+searchBox.submit();
+
+// Click on the product
+WebElement productLink = driver.findElement(By.xpath("//span[contains(text(),'Product Name')]"));
+productLink.click();
+
+// Verify product details
+WebElement productName = driver.findElement(By.id("productTitle"));
+assertEquals("Product Name", productName.getText());
+WebElement productPrice = driver.findElement(By.xpath("//span[@id='priceblock_ourprice']"));
+assertEquals("$9.99", productPrice.getText());
+
+// Add to cart
+WebElement quantityDropdown = driver.findElement(By.id("quantity"));
+Select select = new Select(quantityDropdown);
+select.selectByVisibleText("2");
+WebElement addToCartButton = driver.findElement(By.id("add-to-cart-button"));
+addToCartButton.click();
+
+// Verify product added to cart
+WebElement cartCounter = driver.findElement(By.id("nav-cart-count"));
+assertEquals("2", cartCounter.getText());
+
+Test Case 2: Removing a product from the cart
+
+    Navigate to the cart page of Amazon.
+    Verify that the correct product and its details are displayed in the cart.
+    Click on the "Delete" button to remove the product from the cart.
+    Verify that the product is removed from the cart and the cart counter is updated accordingly.
+
+Java automation code:
+// Navigate to the cart page
+driver.get("https://www.amazon.com/gp/cart/view.html/ref=nav_cart");
+
+// Verify product details in the cart
+WebElement productName = driver.findElement(By.xpath("//span[contains(text(),'Product Name')]"));
+assertEquals("Product Name", productName.getText());
+WebElement productPrice = driver.findElement(By.xpath("//span[@class='a-color-price']"));
+assertEquals("$9.99", productPrice.getText());
+
+// Remove product from cart
+WebElement deleteButton = driver.findElement(By.xpath("//input[@value='Delete']"));
+deleteButton.click();
+
+// Verify product removed from cart
+List<WebElement> cartItems = driver.findElements(By.xpath("//span[contains(text(),'Product Name')]"));
+assertEquals(0, cartItems.size());
+WebElement cartCounter = driver.findElement(By.id("nav-cart-count"));
+assertEquals("0", cartCounter.getText());
+
+3) Automation testing code for amazon user registration form in java:
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class AmazonUserRegistrationTest {
+    public static void main(String[] args) {
+        // Setting up the Chrome driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        
+        // Navigating to the Amazon registration page
+        driver.get("https://www.amazon.com/ap/register");
+        
+        // Finding the input fields and buttons
+        WebElement nameInput = driver.findElement(By.id("ap_customer_name"));
+        WebElement emailInput = driver.findElement(By.id("ap_email"));
+        WebElement passwordInput = driver.findElement(By.id("ap_password"));
+        WebElement passwordCheckInput = driver.findElement(By.id("ap_password_check"));
+        WebElement createAccountButton = driver.findElement(By.id("createAccountSubmit"));
+        
+        // Entering the user registration details
+        nameInput.sendKeys("John Doe");
+        emailInput.sendKeys("johndoe@example.com");
+        passwordInput.sendKeys("password123");
+        passwordCheckInput.sendKeys("password123");
+        
+        // Clicking on the Create account button
+        createAccountButton.click();
+        
+        // Validating if the registration was successful
+        if(driver.getCurrentUrl().equals("https://www.amazon.com/ap/signin")){
+            System.out.println("User registration was successful!");
+        }else{
+            System.out.println("User registration failed.");
+        }
+        
+        // Closing the browser
+        driver.quit();
+    }
+}
+
+
